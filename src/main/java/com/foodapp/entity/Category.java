@@ -1,20 +1,27 @@
 package com.foodapp.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Table(
+        name = "categories",
+        uniqueConstraints = @UniqueConstraint(name = "uk_category_name", columnNames = "name")
+)
 @Getter
 @Setter
-@Table(name = "categories")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+@SuperBuilder
+@NoArgsConstructor
+public class Category extends BaseEntity {
+
     @NotBlank
-    private String categoryName;
+    @Column(nullable = false, length = 60)
+    private String name;
 }

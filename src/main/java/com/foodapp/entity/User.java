@@ -1,5 +1,6 @@
 package com.foodapp.entity;
 
+import com.foodapp.entity.enums.UserRoles;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,10 @@ public class User {
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRoles role;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

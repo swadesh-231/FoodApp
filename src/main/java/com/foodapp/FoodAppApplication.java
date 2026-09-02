@@ -1,5 +1,6 @@
 package com.foodapp;
 
+import com.foodapp.config.EnvConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class FoodAppApplication {
 
     public static void main(String[] args) {
+        EnvConfig.load();
         SpringApplication.run(FoodAppApplication.class, args);
     }
 

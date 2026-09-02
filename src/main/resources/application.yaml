@@ -1,3 +1,30 @@
 spring:
   application:
     name: FoodApp
+
+  datasource:
+    url: ${DB_URL}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+app:
+  jwt:
+    access-token:
+      secret-key: ${JWT_ACCESS_SECRET}
+      expiration: ${JWT_ACCESS_EXPIRATION}
+
+    refresh-token:
+      secret-key: ${JWT_REFRESH_SECRET}
+      expiration: ${JWT_REFRESH_EXPIRATION}
+
+  imagekit:
+    public-key: ${IMAGEKIT_PUBLIC_KEY}
+    private-key: ${IMAGEKIT_PRIVATE_KEY}
+    url-endpoint: ${IMAGEKIT_URL_ENDPOINT}

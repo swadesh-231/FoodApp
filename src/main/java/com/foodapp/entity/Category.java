@@ -1,6 +1,7 @@
 package com.foodapp.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -13,7 +14,7 @@ import lombok.*;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
-    private String category;
+    private Long categoryId;
+    @NotBlank
+    private String categoryName;
 }

@@ -1,18 +1,8 @@
 package com.foodapp.entity;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
 @Table(
@@ -21,17 +11,39 @@ import lombok.experimental.SuperBuilder;
 )
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
-public class Address extends BaseEntity {
+@AllArgsConstructor
+public class Address {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Embedded
-    private AddressDetails details;
+    @NotBlank
+    @Column(columnDefinition = "TEXT")
+    private String addressLine;
 
-    @Column(length = 30)
-    private String label;
+    @NotBlank
+    @Size(max = 60)
+    private String city;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @NotBlank
+    @Size(max = 60)
+    private String state;
+
+    @NotBlank
+    @Pattern(regexp = "\\d{6}", message = "Pincode must be 6 digits")
+    @Column(length = 6)
+    private String pincode;
+
+    @NotBlank
+    @Size(max = 60)
+    private String country;
+
+    private boolean isDefault;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
 }

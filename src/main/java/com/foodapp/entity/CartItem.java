@@ -1,22 +1,8 @@
 package com.foodapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.Min;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
-import java.math.BigDecimal;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
 @Table(
@@ -29,26 +15,26 @@ import java.math.BigDecimal;
 )
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
-public class CartItem extends BaseEntity {
+@AllArgsConstructor
+public class CartItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cartItemId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cart_id", nullable = false)
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "food_item_id", nullable = false)
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "food_item_id")
     private FoodItem foodItem;
 
+    @NotNull
     @Min(1)
-    @Column(nullable = false)
     @Builder.Default
     private Integer quantity = 1;
-
-    /** Live price - the cart reflects the current menu until checkout freezes it onto the order. */
-    @Transient
-    public BigDecimal getLineTotal() {
-        return foodItem.getEffectivePrice().multiply(BigDecimal.valueOf(quantity));
-    }
 }

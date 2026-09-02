@@ -1,68 +1,66 @@
 package com.foodapp.entity;
 
-import com.foodapp.entity.enums.PaymentMethod;
+import com.foodapp.entity.enums.PaymentMode;
 import com.foodapp.entity.enums.PaymentStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
-import java.math.BigDecimal;
-
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
         name = "payments",
         uniqueConstraints = {
+                @UniqueConstraint(name = "uk_payment_order", columnNames = "order_id"),
                 @UniqueConstraint(name = "uk_payment_razorpay_order", columnNames = "razorpay_order_id"),
                 @UniqueConstraint(name = "uk_payment_razorpay_payment", columnNames = "razorpay_payment_id")
-        },
-        indexes = @Index(name = "idx_payment_order", columnList = "order_id")
+        }
 )
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
-public class Payment extends BaseEntity {
+@AllArgsConstructor
+public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Version
-    private Long version;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @PositiveOrZero
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
+    private int amount;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 32)
-    private PaymentMethod paymentMethod;
+    private PaymentMode paymentMode;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 32)
     @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
+    @Size(max = 64)
     @Column(name = "razorpay_order_id")
     private String razorpayOrderId;
 
+    @Size(max = 64)
     @Column(name = "razorpay_payment_id")
     private String razorpayPaymentId;
 
+    @Size(max = 512)
     private String razorpaySignature;
+
+    private LocalDateTime paidAt;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

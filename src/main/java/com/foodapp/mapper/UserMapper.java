@@ -10,5 +10,6 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
 
     @Mapping(target = "username", source = "name")
+    @Mapping(target = "createdAt", source = "createdDate")
     UserResponse toResponse(User user);
 }

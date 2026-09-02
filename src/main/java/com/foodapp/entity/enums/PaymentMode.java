@@ -1,6 +1,6 @@
 package com.foodapp.entity.enums;
 
-public enum PaymentMethod {
+public enum PaymentMode {
     CARD,
     UPI,
     WALLET,

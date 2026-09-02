@@ -1,48 +1,41 @@
 package com.foodapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
-import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
-/** Ledger row written once per delivered order; payouts are summed from these, never recomputed. */
 @Entity
 @Table(
         name = "delivery_earnings",
         uniqueConstraints = @UniqueConstraint(name = "uk_delivery_earning_order", columnNames = "order_id"),
-        indexes = @Index(name = "idx_delivery_earning_partner", columnList = "delivery_partner_id")
+        indexes = @Index(name = "idx_delivery_earning_partner", columnList = "delivery_boy_id")
 )
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
-public class DeliveryEarning extends BaseEntity {
+@AllArgsConstructor
+public class DeliveryEarning {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "delivery_partner_id", nullable = false)
-    private User deliveryPartner;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "delivery_boy_id")
+    private User deliveryBoy;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false, unique = true)
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @PositiveOrZero
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
+    private int amount;
 
-    @Column(nullable = false)
-    private Instant deliveredAt;
+    @NotNull
+    private LocalDateTime deliveryTime;
+
 }

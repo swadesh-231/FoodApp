@@ -1,21 +1,8 @@
 package com.foodapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
-import java.math.BigDecimal;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
 @Table(
@@ -24,33 +11,29 @@ import java.math.BigDecimal;
 )
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
-public class OrderItem extends BaseEntity {
+@AllArgsConstructor
+public class OrderItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "food_item_id", nullable = false)
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "food_id")
     private FoodItem foodItem;
 
-
-    @Column(nullable = false)
-    private String itemName;
-
     @Min(1)
-    @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
 
-
-    @PositiveOrZero
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
-
-    @Transient
-    public BigDecimal getLineTotal() {
-        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+    public double getActualPriceOfOrderItem() {
+        return quantity * foodItem.actualPrice();
     }
+
 }

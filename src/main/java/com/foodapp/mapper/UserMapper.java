@@ -1,6 +1,6 @@
 package com.foodapp.mapper;
 
-import com.foodapp.dto.UserResponse;
+import com.foodapp.dto.response.UserResponse;
 import com.foodapp.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

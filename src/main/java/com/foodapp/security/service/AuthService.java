@@ -1,8 +1,8 @@
 package com.foodapp.security.service;
 
-import com.foodapp.dto.LoginRequest;
-import com.foodapp.dto.RegisterRequest;
-import com.foodapp.dto.UserResponse;
+import com.foodapp.dto.request.LoginRequest;
+import com.foodapp.dto.request.RegisterRequest;
+import com.foodapp.dto.response.UserResponse;
 
 public interface AuthService {
     UserResponse registerUser(RegisterRequest registerRequest);

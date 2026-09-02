@@ -1,6 +1,6 @@
 package com.foodapp.service.impl;
 
-import com.foodapp.dto.UserResponse;
+import com.foodapp.dto.response.UserResponse;
 import com.foodapp.entity.User;
 import com.foodapp.exception.UserNotFoundException;
 import com.foodapp.mapper.UserMapper;

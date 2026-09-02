@@ -25,6 +25,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation("io.github.cdimascio:java-dotenv:5.2.2")
+    implementation 'com.razorpay:razorpay-java:1.4.10'
     implementation("io.imagekit:image-kit-java:3.0.0")
     implementation 'org.mapstruct:mapstruct:1.6.3'
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'

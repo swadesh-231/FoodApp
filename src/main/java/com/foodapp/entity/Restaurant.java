@@ -20,4 +20,8 @@ public class Restaurant {
     private String city;
     private String state;
     private String postalCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 }

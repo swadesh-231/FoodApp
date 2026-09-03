@@ -37,7 +37,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressResponse> getAddresses() {
-        return addressRepository.findAll()
+        return addressRepository.findAllByDeletedFalse()
                 .stream()
                 .map(addressMapper::toResponse)
                 .toList();
@@ -50,7 +50,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressResponse> getUserAddresses() {
-        return addressRepository.findByUser(authUtil.getUser())
+        return addressRepository.findByUserAndDeletedFalse(authUtil.getUser())
                 .stream()
                 .map(addressMapper::toResponse)
                 .toList();
@@ -82,11 +82,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public void deleteAddress(Long addressId) {
-        addressRepository.delete(findOwnedAddress(addressId));
+        Address address = findOwnedAddress(addressId);
+        address.setDeleted(true);
+        address.setDefault(false);
+        addressRepository.save(address);
     }
 
     private Address findOwnedAddress(Long addressId) {
-        Address address = addressRepository.findById(addressId)
+        Address address = addressRepository.findByIdAndDeletedFalse(addressId)
                 .orElseThrow(() -> new ResourceNotFoundException("Address", "id", addressId));
         User owner = address.getUser();
         if (owner == null || !Objects.equals(owner.getId(), authUtil.getUserId())) {
@@ -99,7 +102,7 @@ public class AddressServiceImpl implements AddressService {
         if (user == null) {
             return;
         }
-        addressRepository.findByUser(user)
+        addressRepository.findByUserAndDeletedFalse(user)
                 .stream()
                 .filter(Address::isDefault)
                 .forEach(existing -> existing.setDefault(false));

@@ -15,10 +15,12 @@ public interface AddressMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     Address toEntity(AddressRequest addressRequest);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "default", source = "isDefault")
     void updateEntity(AddressRequest addressRequest, @MappingTarget Address address);
 }

@@ -42,6 +42,8 @@ public class Address {
 
     private boolean isDefault;
 
+    private boolean deleted;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

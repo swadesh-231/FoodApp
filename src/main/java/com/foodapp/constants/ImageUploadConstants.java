@@ -1,4 +1,4 @@
-package com.foodapp.lib;
+package com.foodapp.constants;
 
 import java.util.Set;
 

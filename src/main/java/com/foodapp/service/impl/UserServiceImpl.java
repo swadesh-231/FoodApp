@@ -24,8 +24,8 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.foodapp.lib.ImageUploadConstants.ALLOWED_IMAGE_EXTENSIONS;
-import static com.foodapp.lib.ImageUploadConstants.PROFILE_IMAGE_FOLDER;
+import static com.foodapp.constants.ImageUploadConstants.ALLOWED_IMAGE_EXTENSIONS;
+import static com.foodapp.constants.ImageUploadConstants.PROFILE_IMAGE_FOLDER;
 
 @Slf4j
 @Service

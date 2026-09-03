@@ -2,13 +2,19 @@ package com.foodapp.security.service;
 
 import com.foodapp.dto.request.LoginRequest;
 import com.foodapp.dto.request.RegisterRequest;
+import com.foodapp.dto.response.LoginResponse;
 import com.foodapp.dto.response.UserResponse;
 import com.foodapp.entity.User;
 import com.foodapp.entity.enums.Role;
 import com.foodapp.exception.APIException;
 import com.foodapp.mapper.UserMapper;
 import com.foodapp.repository.UserRepository;
+import com.foodapp.security.jwt.JwtService;
+import com.foodapp.security.user.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +26,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     public UserResponse registerUser(RegisterRequest registerRequest) {
@@ -40,7 +48,23 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserResponse login(LoginRequest loginRequest) {
-        return null;
+    public LoginResponse login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.email(),
+                        loginRequest.password()
+                )
+        );
+
+        CustomUserDetails userDetails =
+                (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.user();
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        return LoginResponse.builder()
+                .accessToken(accessToken)
+                .build();
     }
 }

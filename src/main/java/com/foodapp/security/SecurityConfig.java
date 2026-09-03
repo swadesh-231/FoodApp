@@ -1,6 +1,6 @@
 package com.foodapp.security;
 
-import com.foodapp.security.filter.JwtAuthenticationEntryPoint;
+import com.foodapp.security.filter.AuthEntryPointJwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+   private final AuthEntryPointJwt authEntryPointJwt;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,21 +42,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html"
-                        ).permitAll()
-                        .requestMatchers(
                                 "/api/v1/restaurants/**",
                                 "/api/v1/food-items/**",
                                 "/api/v1/categories/**"
                         ).permitAll()
-                        .requestMatchers("/api/v1/admin/**")
-                        .hasRole(AppConstants.ADMIN)
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .authenticationEntryPoint(authEntryPointJwt)
                         .accessDeniedHandler((request, response, ex) -> {
                             response.setStatus(HttpStatus.FORBIDDEN.value());
                             response.setContentType("application/json");

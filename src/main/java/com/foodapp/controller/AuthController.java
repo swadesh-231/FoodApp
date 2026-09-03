@@ -2,6 +2,7 @@ package com.foodapp.controller;
 
 import com.foodapp.dto.request.LoginRequest;
 import com.foodapp.dto.request.RegisterRequest;
+import com.foodapp.dto.response.LoginResponse;
 import com.foodapp.dto.response.UserResponse;
 import com.foodapp.security.service.AuthService;
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 

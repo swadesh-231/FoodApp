@@ -23,7 +23,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponse registerUser(RegisterRequest registerRequest) {
-        String email = registerRequest.email().trim().toLowerCase(Locale.ROOT);
+        String email = registerRequest.email()
+                .trim()
+                .toLowerCase(Locale.ROOT);
         if (userRepository.existsByEmail(email)) {
             throw new APIException("Email is already registered");
         }
@@ -31,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
                 .name(registerRequest.username().trim())
                 .email(email)
                 .password(passwordEncoder.encode(registerRequest.password()))
-                .role(Role.ROLE_USER)
+                .role(Role.CUSTOMER)
                 .build();
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);

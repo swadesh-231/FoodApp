@@ -7,7 +7,9 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class  User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,17 +38,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Role role = Role.ROLE_USER;
+    private Role role = Role.CUSTOMER;
 
-    @Builder.Default
-    private boolean available = true;
-
-    @Builder.Default
-    private boolean enabled = true;
 
     private Instant createdDate;
 

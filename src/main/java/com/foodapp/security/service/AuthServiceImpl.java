@@ -2,6 +2,7 @@ package com.foodapp.security.service;
 
 import com.foodapp.dto.request.LoginRequest;
 import com.foodapp.dto.request.RegisterRequest;
+import com.foodapp.dto.response.RegisterResponse;
 import com.foodapp.dto.response.UserResponse;
 import com.foodapp.entity.User;
 import com.foodapp.entity.enums.Role;
@@ -32,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
-    public UserResponse registerUser(RegisterRequest registerRequest) {
+    public RegisterResponse registerUser(RegisterRequest registerRequest) {
         String email = registerRequest.email()
                 .trim()
                 .toLowerCase(Locale.ROOT);
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.CUSTOMER)
                 .build();
         User savedUser = userRepository.save(user);
-        return userMapper.toResponse(savedUser);
+        return userMapper.toRegisterResponse(savedUser);
     }
 
     @Override

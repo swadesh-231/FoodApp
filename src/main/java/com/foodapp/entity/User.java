@@ -38,6 +38,11 @@ public class  User {
     @Column(nullable = false)
     private String password;
 
+    @Column(length = 512)
+    private String imageUrl;
+
+    private String imageFileId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default

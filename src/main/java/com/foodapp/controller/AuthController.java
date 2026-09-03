@@ -3,6 +3,7 @@ package com.foodapp.controller;
 import com.foodapp.dto.request.LoginRequest;
 import com.foodapp.dto.request.RegisterRequest;
 import com.foodapp.dto.response.LoginResponse;
+import com.foodapp.dto.response.RegisterResponse;
 import com.foodapp.dto.response.UserResponse;
 import com.foodapp.exception.dto.ApiResponse;
 import com.foodapp.security.service.AuthService;
@@ -35,7 +36,7 @@ public class AuthController {
     private Long refreshTokenExpiry;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(registerRequest));
     }
 

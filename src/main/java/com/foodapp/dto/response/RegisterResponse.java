@@ -4,11 +4,10 @@ import com.foodapp.entity.enums.Role;
 
 import java.time.Instant;
 
-public record UserResponse(
+public record RegisterResponse(
         Long id,
         String username,
         String email,
-        String imageUrl,
         Role role,
         Instant createdAt
 ) {

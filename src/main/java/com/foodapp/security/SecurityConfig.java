@@ -1,12 +1,13 @@
 package com.foodapp.security;
 
-import com.foodapp.constants.AppConstants;
 import com.foodapp.security.filter.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +16,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -30,19 +33,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/v1/auth/**"
-                        ).permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -53,31 +51,28 @@ public class SecurityConfig {
                                 "/api/v1/food-items/**",
                                 "/api/v1/categories/**"
                         ).permitAll()
-                        .requestMatchers(
-                                "/api/v1/admin/**"
-                        ).hasRole(AppConstants.ADMIN)
+                        .requestMatchers("/api/v1/admin/**")
+                        .hasRole(AppConstants.ADMIN)
                         .anyRequest().authenticated()
                 )
-
-                .exceptionHandling(exception ->
-                        exception
-                                .authenticationEntryPoint(authenticationEntryPoint)
-                                .accessDeniedHandler((request, response, ex) -> {
-
-                                    response.setStatus(
-                                            HttpStatus.FORBIDDEN.value()
-                                    );
-
-                                    response.setContentType(
-                                            "application/json"
-                                    );
-
-                                    response.getWriter().write(
-                                            "{\"error\":\"Access denied\"}"
-                                    );
-                                })
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler((request, response, ex) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"Access denied\"}");
+                        })
                 );
 
         return http.build();
+    }
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new AccessDeniedHandlerImpl();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 }

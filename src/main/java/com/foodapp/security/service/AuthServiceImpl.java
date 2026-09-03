@@ -2,7 +2,6 @@ package com.foodapp.security.service;
 
 import com.foodapp.dto.request.LoginRequest;
 import com.foodapp.dto.request.RegisterRequest;
-import com.foodapp.dto.response.LoginResponse;
 import com.foodapp.dto.response.UserResponse;
 import com.foodapp.entity.User;
 import com.foodapp.entity.enums.Role;
@@ -11,6 +10,7 @@ import com.foodapp.mapper.UserMapper;
 import com.foodapp.repository.UserRepository;
 import com.foodapp.security.jwt.JwtService;
 import com.foodapp.security.user.CustomUserDetails;
+import com.foodapp.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     public UserResponse registerUser(RegisterRequest registerRequest) {
@@ -48,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public AuthTokens login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.email(),
@@ -63,8 +64,20 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        return LoginResponse.builder()
-                .accessToken(accessToken)
-                .build();
+        return new AuthTokens(accessToken, refreshToken);
+    }
+
+    @Override
+    public String refreshToken(String refreshToken) {
+        if (!jwtService.validateRefreshToken(refreshToken)) {
+            throw new APIException("Invalid or expired refresh token");
+        }
+
+        String email = jwtService.getUsernameFromRefreshToken(refreshToken);
+
+        CustomUserDetails userDetails =
+                (CustomUserDetails) customUserDetailsService
+                        .loadUserByUsername(email);
+        return jwtService.generateAccessToken(userDetails.user());
     }
 }

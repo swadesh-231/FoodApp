@@ -1,0 +1,13 @@
+package com.foodapp.repository;
+
+import com.foodapp.entity.Restaurant;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+    List<Restaurant> findByIsActiveTrue();
+
+    Optional<Restaurant> findByIdAndIsActiveTrue(Long restaurantId);
+}

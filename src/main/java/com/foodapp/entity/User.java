@@ -48,6 +48,9 @@ public class  User {
     @Builder.Default
     private Role role = Role.CUSTOMER;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean enabled = true;
 
     private Instant createdDate;
 

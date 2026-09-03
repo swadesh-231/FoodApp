@@ -28,3 +28,11 @@ app:
     public-key: ${IMAGEKIT_PUBLIC_KEY}
     private-key: ${IMAGEKIT_PRIVATE_KEY}
     url-endpoint: ${IMAGEKIT_URL_ENDPOINT}
+
+  admin:
+    email: ${APP_ADMIN_EMAIL}
+    password: ${APP_ADMIN_PASSWORD}
+
+  delivery-partner:
+    email: ${APP_DELIVERY_EMAIL}
+    password: ${APP_DELIVERY_PASSWORD}

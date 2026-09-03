@@ -10,13 +10,10 @@ import org.springframework.stereotype.Component;
 public class AuthUtil {
 
     public CustomUserDetails getCurrentUserDetails() {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         assert authentication != null;
         return (CustomUserDetails) authentication.getPrincipal();
     }
-
     public User getUser() {
         return getCurrentUserDetails().user();
     }

@@ -19,57 +19,29 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
 public class AdminController {
-    private final AddressService addressService;
     private final RestaurantService restaurantService;
 
-    @GetMapping("/addresses")
-    public ResponseEntity<List<AddressResponse>> getAddresses() {
-        return ResponseEntity.ok(addressService.getAddresses());
-    }
-
-
     @PostMapping("/restaurants")
-    public ResponseEntity<RestaurantResponse> createRestaurant(
-            @Valid @RequestBody CreateRestaurantRequest request
-    ) {
-        return ResponseEntity.ok(
-                restaurantService.createRestaurant(request)
-        );
+    public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {
+        return ResponseEntity.ok(restaurantService.createRestaurant(request));
     }
-
     @GetMapping("/restaurants")
     public ResponseEntity<List<RestaurantResponse>> getRestaurants() {
-        return ResponseEntity.ok(
-                restaurantService.getAllRestaurants()
-        );
+        return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
 
     @GetMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<RestaurantResponse> getRestaurant(
-            @PathVariable Long restaurantId
-    ) {
-        return ResponseEntity.ok(
-                restaurantService.getRestaurantById(restaurantId)
-        );
+    public ResponseEntity<RestaurantResponse> getRestaurant(@PathVariable Long restaurantId) {
+        return ResponseEntity.ok(restaurantService.getRestaurantById(restaurantId));
     }
 
     @PatchMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<RestaurantResponse> updateRestaurant(
-            @PathVariable Long restaurantId,
-            @Valid @RequestBody UpdateRestaurantRequest request
-    ) {
-        return ResponseEntity.ok(
-                restaurantService.updateRestaurant(
-                        restaurantId,
-                        request
-                )
-        );
+    public ResponseEntity<RestaurantResponse> updateRestaurant(@PathVariable Long restaurantId, @Valid @RequestBody UpdateRestaurantRequest request) {
+        return ResponseEntity.ok(restaurantService.updateRestaurant(restaurantId, request));
     }
 
     @DeleteMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<Void> deleteRestaurant(
-            @PathVariable Long restaurantId
-    ) {
+    public ResponseEntity<Void> deleteRestaurant(@PathVariable Long restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);
         return ResponseEntity.noContent().build();
     }
@@ -79,12 +51,7 @@ public class AdminController {
             @PathVariable Long restaurantId,
             @RequestParam boolean open
     ) {
-        return ResponseEntity.ok(
-                restaurantService.updateOpenStatus(
-                        restaurantId,
-                        open
-                )
-        );
+        return ResponseEntity.ok(restaurantService.updateOpenStatus(restaurantId, open));
     }
 
     @PostMapping(

@@ -28,8 +28,7 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<AddressResponse> createAddress(@Valid @RequestBody AddressRequest addressRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(addressService.createAddress(addressRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressService.createAddress(addressRequest));
     }
     @GetMapping
     public ResponseEntity<List<AddressResponse>> getUserAddresses() {

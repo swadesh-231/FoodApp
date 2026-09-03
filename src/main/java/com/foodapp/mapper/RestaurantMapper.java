@@ -14,7 +14,6 @@ import org.mapstruct.ReportingPolicy;
 public interface RestaurantMapper {
 
     @Mapping(target = "ownerId", source = "owner.id")
-    // Lombok generates isActive() for the isActive field, so JavaBeans calls it "active".
     @Mapping(target = "isActive", source = "active")
     RestaurantResponse toResponse(Restaurant restaurant);
 }

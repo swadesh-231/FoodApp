@@ -8,6 +8,7 @@ import com.foodapp.entity.enums.Role;
 import com.foodapp.exception.APIException;
 import com.foodapp.mapper.UserMapper;
 import com.foodapp.repository.UserRepository;
+import com.foodapp.security.dto.AuthTokens;
 import com.foodapp.security.jwt.JwtService;
 import com.foodapp.security.user.CustomUserDetails;
 import com.foodapp.security.user.CustomUserDetailsService;

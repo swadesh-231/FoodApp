@@ -4,8 +4,9 @@ import com.foodapp.dto.request.LoginRequest;
 import com.foodapp.dto.request.RegisterRequest;
 import com.foodapp.dto.response.LoginResponse;
 import com.foodapp.dto.response.UserResponse;
+import com.foodapp.exception.dto.ApiResponse;
 import com.foodapp.security.service.AuthService;
-import com.foodapp.security.service.AuthTokens;
+import com.foodapp.security.dto.AuthTokens;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -62,6 +63,29 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 new LoginResponse(loginResult.accessToken())
+        );
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse> logout(HttpServletResponse response) {
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false) // local HTTP; true in production HTTPS
+                .path("/api/v1/auth")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                cookie.toString()
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .message("Logged out successfully")
+                        .status(true)
+                        .build()
         );
     }
 

@@ -1,4 +1,4 @@
-package com.foodapp.security.service;
+package com.foodapp.security.dto;
 
 public record AuthTokens(
         String accessToken,

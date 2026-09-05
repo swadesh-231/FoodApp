@@ -10,7 +10,6 @@ import org.mapstruct.ReportingPolicy;
 public interface FoodItemMapper {
 
     @Mapping(target = "restaurantId", source = "restaurant.id")
-    // actualPrice() is a plain method rather than a getter, so MapStruct cannot find it.
     @Mapping(target = "actualPrice", expression = "java(foodItem.actualPrice())")
     FoodItemResponse toResponse(FoodItem foodItem);
 }
